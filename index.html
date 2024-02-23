@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang='en'>
+  <head>
+    <style> body { margin:0 } </style>
+    <link rel='stylesheet' href='style.css'>
+    <script src='waveform.js' type="module"></script>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      uniform float u_amplitude;
+      uniform float[64] u_data_array;
+      uniform float u_modifier;
+      uniform float u_period;
+
+      void main(){
+
+        float x = round(abs(position.x));
+        float y = round(abs(position.y));
+
+        float z = pow( u_amplitude / 10.0 * sin(u_data_array[int(x)] / u_period + u_data_array[int(y)] / u_period), u_modifier);
+
+        vec3 newPos = vec3(position.x, position.y, z);
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+      }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      uniform float u_time;
+      uniform float u_color_speed;
+
+      void main(){
+        gl_FragColor = vec4(abs(sin(u_color_speed * u_time)), 0.0, abs(cos(u_color_speed * u_time)), 1.0);
+      }
+
+    </script>
+    <link rel='icon' href='data:;base64,iVBORw0KGgo='>
+  </head>
+  <body>
+    <div id="descriptionPane">
+      <div  class="description">
+        <h1>3D Audio Waveform</h1>
+        <p id="p_desc">This page is a 3D audio visualizer that uses the WebAudio API and Three.js. On the parameters panel on the right, the user can audio audio control
+          music volume, the frequency of the waves, the speed of color the changing, and the function power, which is similar to (sin (x) ^ y) where y is the
+          function power. This magnifies the effects of amplitude, frequency, and displacement and yields interesting shapes. You can control the music playing
+          with the audio controller below. Play restarts the music, while stop simply stops it. Credits for the music used called "RE-IGNITION" go to Riot Games Valorant Team and
+          featuring Emei, Jazz Alonso, and ARB4. Enjoy!
+        </p>
+        <button id="close">
+          Close Description
+        </button>
+        <button id="show" hidden>
+          Show Description
+        </button>
+        <div id="audioControl">
+          <button id="start">Play</button>
+          <button id="stop">Stop</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

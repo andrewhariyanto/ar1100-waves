@@ -1,0 +1,15 @@
+{
+    "name": "Webware_Assignment_4",
+    "version": "0.0.1",
+    "description": "Particle System",
+    "author": "Andrew Hariyanto",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "http-server": "^14.1.1",
+        "node": "^20.7.0"
+    }
+}

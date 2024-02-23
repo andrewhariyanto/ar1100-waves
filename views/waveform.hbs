@@ -1,0 +1,35 @@
+  <head>
+    <style> body { margin:0 } </style>
+    <script src='waveform.js' type="module"></script>
+    <script id="vertexShader" type="x-shader/x-vertex">
+      uniform float u_amplitude;
+      uniform float[64] u_data_array;
+      uniform float u_modifier;
+      uniform float u_period;
+
+      void main(){
+
+        float x = round(abs(position.x));
+        float y = round(abs(position.y));
+
+        float z = pow( u_amplitude / 10.0 * cos(u_data_array[int(x)] / u_period + u_data_array[int(y)] / u_period), u_modifier);
+
+        vec3 newPos = vec3(position.x, position.y, z);
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+      }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      uniform float u_time;
+      uniform float u_color_speed;
+
+      void main(){
+        gl_FragColor = vec4(abs(sin(u_color_speed * u_time)), 0.0, abs(cos(u_color_speed * u_time)), 1.0);
+      }
+
+    </script>
+  </head>
+  <body>
+    <button id="start">Play</button>
+    <button id="stop">Stop</button>
+  </body>
