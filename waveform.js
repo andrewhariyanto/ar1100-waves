@@ -2,10 +2,14 @@ import * as THREE from 'https://unpkg.com/three/build/three.module.js'
 import { Pane } from 'https://unpkg.com/tweakpane'
 
 const params = {
-    amplitude: 32.0,
-    function_power: 0.3,
-    wave_period: 20.0,
     color_speed: 1.0,
+    point_size: 1.0,
+    noise_amp1: 0.31,
+    noise_freq1: 0.31,
+    speed_modifier1: 1,
+    noise_amp2: 1.5,
+    noise_freq2: 0.31,
+    speed_modifier2: 1,
 }
 
 //Audio
@@ -45,11 +49,14 @@ const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerH
 
 const uniforms = {
     u_time: { type: "f", value: 0.0 },
-    u_data_array: { type: "float[64]", value: results },
-    u_amplitude: { type: "f", value: params.amplitude },
-    u_modifier: { type: "f", value: params.function_power },
-    u_period: {type: "f", value: params.wave_period },
     u_color_speed: {type: "f", value: params.color_speed},
+    u_pointsize: { type: "f", value: params.point_size},
+    u_noise_amp_1: {type: "f", value: params.noise_amp1},
+    u_noise_freq_1 : {type: "f", value: params.noise_freq1},
+    u_spd_modifier_1 : {type: "f", value: params.speed_modifier1},
+    u_noise_amp_2 : {type: "f", value: params.noise_amp2},
+    u_noise_freq_2: {type: "f", value: params.noise_freq2},
+    u_spd_modifier_2: {type: "f", value: params.speed_modifier2},
 }
 
 const start = function () {
@@ -60,32 +67,51 @@ const start = function () {
     const pane = new Pane({
         title: 'Parameters',
     })
-
-    pane.addBinding(params, "amplitude", {
-        label: 'volume',
-        min: 0,
-        max: 100,
-    })
-    pane.addBinding(params, "function_power", {
-        label: 'function power',
-        min: 0.1,
-        max: 1,
-    })
-    pane.addBinding(params, "wave_period", {
-        label: 'wave period',
-        min: 10.0,
-        max: 50.0,
-    })
     pane.addBinding(params, "color_speed", {
         label: 'color change speed',
         min: 0.0,
         max: 2.0,
     })
+    pane.addBinding(params, "point_size", {
+        label: 'point size',
+        min: 0.0,
+        max: 10.0,
+    })
+    pane.addBinding(params, "noise_amp1", {
+        label: 'Wave 1 Amp',
+        min: 0.0,
+        max: 3.0,
+    })
+    pane.addBinding(params, "noise_freq1", {
+        label: 'Wave 1 Freq',
+        min: 0.0,
+        max: 3.0,
+    })
+    pane.addBinding(params, "speed_modifier1", {
+        label: 'Wave 1 Speed',
+        min: 0.0,
+        max: 3.0,
+    })
+    pane.addBinding(params, "noise_amp2", {
+        label: 'Wave 2 Amp',
+        min: 0.0,
+        max: 3.0,
+    })
+    pane.addBinding(params, "noise_freq2", {
+        label: 'Wave 2 Freq',
+        min: 0.0,
+        max: 3.0,
+    })
+    pane.addBinding(params, "speed_modifier2", {
+        label: 'Wave 2 Speed',
+        min: 0.0,
+        max: 3.0,
+    })
 }
 
 const initCamera = function () {
-    camera.position.z = 30
-    camera.position.y = -50
+    camera.position.z = 5
+    camera.position.y = -20
     camera.lookAt(0, 0, 0)
 }
 
@@ -107,12 +133,14 @@ function render() {
     analyser.getByteFrequencyData(results)
 
     uniforms.u_time.value = clock.getElapsedTime()
-    uniforms.u_data_array.value = results
-    uniforms.u_amplitude.value = params.amplitude
-    uniforms.u_modifier.value = params.function_power
-    uniforms.u_period.value = params.wave_period
     uniforms.u_color_speed.value = params.color_speed
-    audioElement.volume = params.amplitude/100
+    uniforms.u_pointsize.value = params.point_size
+    uniforms.u_noise_amp_1.value = params.noise_amp1
+    uniforms.u_noise_freq_1.value = params.noise_freq1
+    uniforms.u_spd_modifier_1.value = params.speed_modifier1
+    uniforms.u_noise_amp_2.value = params.noise_amp2
+    uniforms.u_noise_freq_2.value = params.noise_freq2
+    uniforms.u_spd_modifier_2.value = params.speed_modifier2
 
     renderer.render(scene, camera)
     window.requestAnimationFrame(render)
